@@ -2,7 +2,7 @@ import json, requests, datetime
 from exchange.CoinBaseAuthenticate import CoinbaseExchangeAuth
 
 class CoinbaseExchange(object):
-    #Class used to perform different actions on the GDAX API
+    #Class used to perform different actions on the CBPro API
     def __init__(self, api_key, secret_key, passphrase, api_url):
         self.api_url = api_url
         self.auth = CoinbaseExchangeAuth(api_key, secret_key, passphrase)
@@ -41,31 +41,14 @@ class CoinbaseExchange(object):
         #if we get a successfull response
         if(request.status_code == 200):
             accounts = request.json()
-            # print(accounts)
-            # #Find index corresponding to currency
-            # my_incredible_list = (index for (index, d) in enumerate(accounts) if d['currency'] == currency)
-            # # my_incredible_list = (index for (index, d) in enumerate(accounts))
-
-            # print("My Incredicble List: ")
-            # index = next(my_incredible_list)
-            # balance = accounts[index]['balance']
-            # print("balance: " + balance)
             index = next(index for (index, d) in enumerate(accounts) if d['currency'] == currency)
             balance = accounts[index]['balance']
-            # print("my balance: " + balance)
             return balance
         else:
             print("GetBalance error. Status Code: " + request.status_code)
 
     def getProductId(self, base_currency, quote_currency):
-        #SandBox price list is inaccurate
-        # self.api_url = 'https://api.gdax.com/'
         request = requests.get(self.api_url + 'products', auth=self.auth)
-        # self.api_url = 'https://api.pro.coinbase.com/'
-        #request = requests.get('https://api.pro.coinbase.com/' + 'products', auth=self.auth)
-        
-        #request = requests.get('https://api.gdax.com/' + 'products', auth=self.auth)
-
         products = request.json()
 
         #Find index corresponding to pair
@@ -74,25 +57,15 @@ class CoinbaseExchange(object):
         return product_id
 
     def getPrice(self, product_id):
-        #SandBox price list is inaccurate
-        # self.api_url = 'https://api.gdax.com/'
-        # request = requests.get(self.api_url  + 'products/' + product_id + '/ticker', auth=self.auth)
-        #self.api_url = 'https://api.pro.coinbase.com/'
         request = requests.get(self.api_url  + 'products/' + product_id + '/ticker', auth=self.auth)
-        #request = requests.get('https://api.pro.coinbase.com/'  + 'products/' + product_id + '/ticker', auth=self.auth)
-
-        #request = requests.get('https://api.gdax.com/'  + 'products/' + product_id + '/ticker', auth=self.auth)
-
         product = request.json()
         price = product['price']
         return price
 
     def determinePrice(self, product_id, option):
-        print("determining price")
         parameters = {
             'level': '1'
         }
-        # request = requests.get('https://api.gdax.com/' + 'products/' + product_id + '/book', data = json.dumps(parameters), auth=self.auth, timeout=30)
         request = requests.get('https://api.pro.coinbase.com/' + 'products/' + product_id + '/book', data = json.dumps(parameters), auth=self.auth, timeout=30)
 
         book = request.json()
@@ -107,10 +80,6 @@ class CoinbaseExchange(object):
         #Rounded down to 7dp
         quantity = (quantity // 0.0000001) / 10000000
         
-        # Smallest unit accepted is 0.01000000. Round quantity  down
-        #quantity = (quantity // 0.01)/100 
-        #quantity = round(quantity,2)
-
         parameters = {
             'type': 'limit',
             'size': quantity,

@@ -1,6 +1,4 @@
-# cbpro/WebsocketClient.py
-# original author: Daniel Paquin
-# mongo "support" added by Drew Rice
+
 #
 #
 # Template object to receive messages from the Coinbase Websocket Feed
@@ -14,7 +12,6 @@ import time
 from threading import Thread
 from websocket import create_connection, WebSocketConnectionClosedException
 from pymongo import MongoClient
-# from cbpro.cbpro_auth import get_auth_headers
 from .cbpro_auth import get_auth_headers
 
 
@@ -31,9 +28,7 @@ class WebsocketClient(object):
             auth=False,
             api_key="",
             api_secret="",
-            api_passphrase="",
-            #base_currency,
-            #quote_currency,
+            api_passphrase="", 
             # Make channels a required keyword-only argument; see pep3102
             *,
             # Channel options: ['ticker', 'user', 'matches', 'level2', 'full']
@@ -54,8 +49,6 @@ class WebsocketClient(object):
         self.mongo_price_collection = mongo_price_collection
         self.mongo_transaction_collection = mongo_transaction_collection
 
-        #self.base_currency = base_currency
-        #self.quote_currency = quote_currency
 
     def start(self):
         def _go():
@@ -126,6 +119,7 @@ class WebsocketClient(object):
         self.on_close()
 
     def close(self):
+        print("close!")
         self.stop = True   # will only disconnect after next msg recv
         self._disconnect() # force disconnect so threads can join
         self.thread.join()
@@ -142,7 +136,6 @@ class WebsocketClient(object):
         if self.should_print:
             print(msg)
         if self.mongo_price_collection:  # dump JSON to given mongo collection
-            print("insert mongo")
             self.mongo_price_collection.insert_one(msg)
 
     def on_error(self, e, data=None):
