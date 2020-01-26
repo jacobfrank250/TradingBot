@@ -10,13 +10,15 @@ import json
 class Model(object):
     # def __init__(self, csv_prices, csv_transactions):
     # def __init__(self):
-    def __init__(self,mongo_collection):
+    def __init__(self,mongo_price_collection,mongo_transaction_collection):
 
 
         # Create CSV files for logging price and transactions
         # self.csv_price = csv_prices
         # self.csv_transactions = csv_transactions
-        self.mongo_collection = mongo_collection
+        # self.mongo_collection = mongo_collection
+        self.mongo_price_collection = mongo_price_collection
+        self.mongo_transaction_collection = mongo_transaction_collection
 
         #Create dataframes to store data
         self.transaction_dataframe = pd.DataFrame(data={'GDAX_id' : [], 'product_id' : [], 'datetime': [], 'buy/sell': [], 'price': [], 'quantity': [], 'status': [], 'fiat_balance' : []})
@@ -143,35 +145,19 @@ class Model(object):
         plt.show()
 
     def logPrice(self, append):
-        # print("************************")
-
-        #Log price to CSV
+        print("log price")
         if (append):
-            
-            # data = self.ema_dataframe.tail(1).to_json(orient = "table",index=False)
-            # dataJson = json.loads(data)
-            # print(json.loads(self.ema_dataframe.tail(1).to_json(orient = "table",index=False))["data"][0])
-        
-            # self.mongo_collection.insert_one(json.loads(self.ema_dataframe.tail(1).to_json(orient = "table",index=False))["data"][0])
-            # print("")
-
-            self.logMongo(self.ema_dataframe.tail(1))
-
-
-        # else:
-        #     self.ema_dataframe.tail(1).to_csv(self.csv_price, encoding='utf-8', index=False, header=True)          
+            self.logMongo(self.ema_dataframe.tail(1),self.mongo_price_collection)
+         
 
     def logTransactions(self, append):
         print("log transactions")
         #Log transactions to CSV
         if (append):
-            #self.transaction_dataframe.tail(1).to_csv(self.csv_transactions, encoding='utf-8', mode='a', index=False, header=False)
-            self.logMongo(self.transaction_dataframe.tail(1))
+            self.logMongo(self.transaction_dataframe.tail(1),self.mongo_transaction_collection)
         # else:
         #     self.transaction_dataframe.tail(1).to_csv(self.csv_transactions, encoding='utf-8', index=False, header=True)  
 
-    def logMongo(self,dfObj):
-        print("************************")
-        print(json.loads(dfObj.to_json(orient = "table",index=False))["data"][0])
-        self.mongo_collection.insert_one(json.loads(dfObj.to_json(orient = "table",index=False))["data"][0])
-        print("")
+    def logMongo(self,dfObj,mongo_collection):
+        # print(json.loads(dfObj.to_json(orient = "table",index=False))["data"][0])
+        mongo_collection.insert_one(json.loads(dfObj.to_json(orient = "table",index=False))["data"][0])

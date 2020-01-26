@@ -25,7 +25,8 @@ class WebsocketClient(object):
             url="wss://ws-feed.pro.coinbase.com",
             products=None,
             message_type="subscribe",
-            mongo_collection=None,
+            mongo_price_collection=None,
+            mongo_transaction_collection=None,
             should_print=True,
             auth=False,
             api_key="",
@@ -50,7 +51,8 @@ class WebsocketClient(object):
         self.api_secret = api_secret
         self.api_passphrase = api_passphrase
         self.should_print = should_print
-        self.mongo_collection = mongo_collection
+        self.mongo_price_collection = mongo_price_collection
+        self.mongo_transaction_collection = mongo_transaction_collection
 
         #self.base_currency = base_currency
         #self.quote_currency = quote_currency
@@ -139,9 +141,9 @@ class WebsocketClient(object):
     def on_message(self, msg):
         if self.should_print:
             print(msg)
-        if self.mongo_collection:  # dump JSON to given mongo collection
+        if self.mongo_price_collection:  # dump JSON to given mongo collection
             print("insert mongo")
-            self.mongo_collection.insert_one(msg)
+            self.mongo_price_collection.insert_one(msg)
 
     def on_error(self, e, data=None):
         self.error = e

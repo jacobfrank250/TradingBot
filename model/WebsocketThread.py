@@ -22,11 +22,11 @@ class WebsocketThread(cbWebsocketClient):
     # def __init__(self, event, wait_time, quote_currency, base_currency):
     # def __init__(self,quote_currency, base_currency):
     # def __init__(self,quote_currency,base_currency,mongo_collection=None,*,channels):
-    def __init__(self,quote_currency,base_currency,mongo_collection,channels):
+    def __init__(self,quote_currency,base_currency,mongo_price_collection,mongo_transaction_collection,channels):
 
         # WebsocketThread.__init__(self)
          # inherit the parent--WebsocketClient--init function
-        cbWebsocketClient.__init__(self,mongo_collection=mongo_collection,channels=channels)
+        cbWebsocketClient.__init__(self,mongo_price_collection=mongo_price_collection,mongo_transaction_collection = mongo_transaction_collection,channels=channels)
         #self.stopped = event
         #self.wait_time = wait_time
         self.quote_currency = quote_currency
@@ -37,7 +37,9 @@ class WebsocketThread(cbWebsocketClient):
 
         #Create model
         # self.model = Model(csv_price, csv_transactions)
-        self.model = Model(self.mongo_collection)
+        # self.model = Model(self.mongo_collection)
+        self.model = Model(self.mongo_price_collection,self.mongo_transaction_collection)
+
 
         #Choose Product
         self.product_id = self.CoinBase.getProductId(self.quote_currency, self.base_currency)

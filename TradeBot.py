@@ -9,12 +9,15 @@ mongo_client = MongoClient("mongodb+srv://{}:{}@cluster0-xog0f.mongodb.net/test?
 # db = mongo_client.cryptocurrency_database
 # BTC_collection = db.BTC_collection
 db = mongo_client["cryptocurrency_db"]
-BTC_collection = db["BTC_collection"]
+# BTC_collection = db["BTC_collection"]
+price_collection = db["price_collection"]
+transaction_collection = db["transaction_collection"]
 
 
 # wsClient = WebsocketThread(channels = ["ticker"], mongo_collection=BTC_collection) #The ticker channel provides real-time price updates every time a match happens
 # wsClient = WebsocketThread("BTC","EUR",channels = ["ticker"],mongo_collection=BTC_collection) #The ticker channel provides real-time price updates every time a match happens
-wsClient = WebsocketThread("BTC","EUR",mongo_collection=BTC_collection,channels=["ticker"]) #The ticker channel provides real-time price updates every time a match happens
+# wsClient = WebsocketThread("BTC","EUR",mongo_collection=BTC_collection,channels=["ticker"]) #The ticker channel provides real-time price updates every time a match happens
+wsClient = WebsocketThread("BTC","EUR",mongo_price_collection=price_collection,mongo_transaction_collection=transaction_collection, channels=["ticker"]) #The ticker channel provides real-time price updates every time a match happens
 
 wsClient.start()
 

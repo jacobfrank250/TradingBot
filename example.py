@@ -39,7 +39,7 @@ if __name__ == "__main__":
             # Version 2
             if 'price' in msg and 'type' in msg:
                 print ("Message type:", msg["type"],"\t@ {:.3f}".format(float(msg["price"])))
-                self.mongo_collection.insert_one(msg)
+                self.mongo_price_collection.insert_one(msg)
             # else:
             #     print('prince and type were not in msg')
             #     print(json.dumps(msg, indent=4, sort_keys=True))
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     BTC_collection = db["BTC_collection"]
 
 
-    wsClient = MyWebsocketClient(channels = ["ticker"], mongo_collection=BTC_collection) #The ticker channel provides real-time price updates every time a match happens
+    wsClient = MyWebsocketClient(channels = ["ticker"], mongo_price_collection=BTC_collection) #The ticker channel provides real-time price updates every time a match happens
     wsClient.start()
     print(wsClient.url, wsClient.products)
     try:
