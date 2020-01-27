@@ -1,5 +1,5 @@
 # TradingBot
-An automated GDAX trading bot built in Python.
+An automated Coinbase Pro trading bot built in Python.
 
 The bot uses a simple exponential moving average (EMA) crossover strategy to attempt to profit from short-term upwards trends in cryptocurrency. A buy/sell signal is triggered when the 5-period EMA and the 20-period EMA intercept. The bot uses the GDAX platform to buy/sell cryptocurrency, accessed via the official API.
 
@@ -28,5 +28,4 @@ API_PASS = ""
 API_URL = "https://api-public.sandbox.pro.coinbase.com/"
 ```
 
-## Acknowledgments
-* [Coinbase Pro Official Documentation](https://docs.pro.coinbase.com/#introduction)
+
