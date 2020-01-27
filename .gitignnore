@@ -1,7 +1,0 @@
-price.csv
-transactions.csv
-config.py
-__pycache__/
-*.pyc
-.idea/
-*.xlsx
