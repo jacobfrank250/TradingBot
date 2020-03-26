@@ -1,17 +1,15 @@
-# TradingBot
-An automated Coinbase Pro trading bot built in Python.
+# Coinbase Pro Trading Bot
 
-The bot uses a simple exponential moving average (EMA) crossover strategy to attempt to profit from short-term upwards trends in cryptocurrency. A buy/sell signal is triggered when the 5-period EMA and the 20-period EMA intercept. The bot uses the Coinbase Pro platform to buy/sell cryptocurrency, accessed via the official API.
+The bot uses an exponential moving average (EMA) crossover trade strategy. It chooses to buy/sell when the 5-period EMA and the 20-period EMA intercept. 
 
-The exit strategy of the bot is straightforward. Once a buy order has been fulfilled, the bot waits for either the price to change +40 basis points or for the EMAs to intercept. The first event to occur triggers the bot to sell the position.
+The bot uses the Coinbase Pro's REST API to perform transactions, and determines the price to buy/sell at by maintaing the live order book through Coinbase Pro's Websocket. 
 
-The bot creates orders that only provide liquidity to the market and thus are market 'maker' orders. The significance of this is that Coinbase Pro currently charges 0% on fees for 'maker' orders.
+The program uses separate threads to:
+*  Track live price and maintain a snapshot of the full orderbook
+*  Calculate EMAs and identify if a crossover has occurred
+*  Buy/sell depending on crossover
 
-The project uses Threads to perform separate functions:
-*  Grab live price, calculate EMAs and identify if a crossover has occurred
-*  Perform a trading action - buy/sell depending on crossover
-
-As the bot runs, all prices and transactions are logged into separate MongoDB collections.
+As the bot runs, all prices and transactions are logged into MongoDB collections.
 
 ## Getting Started
 
@@ -42,6 +40,5 @@ python TradeBot.py
 ## Acknowledgments
 * [Coinbase Pro Documentation](https://docs.pro.coinbase.com/#introduction)
 * [GDAX Trading Bot](https://github.com/calum-mcg/gdax-tradingbot)
-* [CBPro Python Client](https://github.com/danpaquin/coinbasepro-python)
 
 
